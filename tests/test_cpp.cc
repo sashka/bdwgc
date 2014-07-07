@@ -187,10 +187,11 @@ GC_word Disguise( void* p ) {
 void* Undisguise( GC_word i ) {
     return (void*) ~ i;}
 
-#if 0//def MSWIN32
-int APIENTRY WinMain(
-    HINSTANCE instance, HINSTANCE prev, LPSTR cmd, int cmdShow )
-{
+#if (defined(MSWIN32) && !defined(__MINGW32__) || defined(MSWINCE)) \
+    && !defined(NO_WINMAIN_ENTRY)
+  int APIENTRY WinMain( HINSTANCE instance,
+                       HINSTANCE prev, LPSTR cmd, int cmdShow )
+  {
     int argc;
     char* argv[ 3 ];
 

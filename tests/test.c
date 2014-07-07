@@ -1397,7 +1397,8 @@ void GC_CALLBACK warn_proc(char *msg, GC_word p)
 
 #if !defined(PCR) && !defined(GC_WIN32_THREADS) && !defined(GC_PTHREADS) \
     || defined(LINT)
-#if defined(MSWIN32) && !defined(__MINGW32__) || defined(MSWINCE)
+#if (defined(MSWIN32) && !defined(__MINGW32__) || defined(MSWINCE)) \
+    && !defined(NO_WINMAIN_ENTRY)
   int APIENTRY WinMain(HINSTANCE instance, HINSTANCE prev,
                        WINMAIN_LPTSTR cmd, int n)
 #elif defined(RTEMS)
@@ -1548,8 +1549,12 @@ DWORD __stdcall thr_window(void *arg)
 }
 #endif
 
-int APIENTRY WinMain(HINSTANCE instance, HINSTANCE prev,
-                     WINMAIN_LPTSTR cmd, int n)
+#if !defined(NO_WINMAIN_ENTRY)
+  int APIENTRY WinMain(HINSTANCE instance, HINSTANCE prev,
+                       WINMAIN_LPTSTR cmd, int n)
+#else
+  int main(void)
+#endif
 {
 # if NTHREADS > 0
    HANDLE h[NTHREADS];
