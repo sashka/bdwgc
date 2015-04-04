@@ -1251,46 +1251,24 @@ GC_API void GC_CALL GC_register_has_static_roots_callback(
 #     include <process.h> /* For _beginthreadex, _endthreadex */
 #   endif
 
+#   if defined(GC_BUILD) || !defined(GC_DONT_INCLUDE_WINDOWS_H)
+#     include <windows.h>
+#   endif
 
 #   ifdef __cplusplus
       extern "C" {
 #   endif
-
-#ifdef GC_BUILD
-#   include <windows.h>
-#else
-          // copied from various windows header files
-        typedef void            *HANDLE;
-        #define WINAPI          __stdcall
-        typedef unsigned long   DWORD;
-        typedef DWORD           *LPDWORD;
-        typedef int             BOOL;
-        #if defined(_WIN64)
-            typedef unsigned __int64 ULONG_PTR;
-        #else
-            typedef unsigned long ULONG_PTR;
-        #endif
-        typedef ULONG_PTR SIZE_T;
-
-        struct _SECURITY_ATTRIBUTES;
-        typedef DWORD (WINAPI *PTHREAD_START_ROUTINE)(void* lpThreadParameter);
-
-        __declspec(dllimport) HANDLE WINAPI CreateThread(
-                struct _SECURITY_ATTRIBUTES* lpThreadAttributes,
-                SIZE_T dwStackSize,
-                PTHREAD_START_ROUTINE lpStartAddress,
-                void* lpParameter,
-                DWORD dwCreationFlags,
-                DWORD* lpThreadId);
-
-        __declspec(dllimport) __declspec(noreturn) void WINAPI ExitThread(DWORD dwExitCode);
-#endif
 
 #   ifdef GC_UNDERSCORE_STDCALL
       /* Explicitly prefix exported/imported WINAPI (__stdcall) symbols */
       /* with '_' (underscore).  Might be useful if MinGW/x86 is used.  */
 #     define GC_CreateThread _GC_CreateThread
 #     define GC_ExitThread _GC_ExitThread
+#   endif
+
+#   ifndef DECLSPEC_NORETURN
+      /* Typically defined in winnt.h. */
+#     define DECLSPEC_NORETURN  __declspec(noreturn)
 #   endif
 
     /* All threads must be created using GC_CreateThread or             */
@@ -1303,20 +1281,24 @@ GC_API void GC_CALL GC_register_has_static_roots_callback(
     /* Currently the collector expects all threads to fall through and  */
     /* terminate normally, or call GC_endthreadex() or GC_ExitThread,   */
     /* so that the thread is properly unregistered.                     */
-    GC_API HANDLE WINAPI GC_CreateThread(
-                struct _SECURITY_ATTRIBUTES* /* lpThreadAttributes */,
+#   if defined(WINAPI) /* windows.h included */
+      GC_API HANDLE WINAPI GC_CreateThread(
+                LPSECURITY_ATTRIBUTES /* lpThreadAttributes */,
                 SIZE_T /* dwStackSize */,
-                PTHREAD_START_ROUTINE /* lpStartAddress */,
-                void* /* lpParameter */, DWORD /* dwCreationFlags */,
+                LPTHREAD_START_ROUTINE /* lpStartAddress */,
+                LPVOID /* lpParameter */, DWORD /* dwCreationFlags */,
                 LPDWORD /* lpThreadId */);
 
-#   ifndef DECLSPEC_NORETURN
-      /* Typically defined in winnt.h. */
-#     define DECLSPEC_NORETURN  __declspec(noreturn)
-#   endif
-
-    GC_API DECLSPEC_NORETURN void WINAPI GC_ExitThread(
+      GC_API DECLSPEC_NORETURN void WINAPI GC_ExitThread(
                                                 DWORD /* dwExitCode */);
+#   else
+      struct _SECURITY_ATTRIBUTES;
+      GC_API void *__stdcall GC_CreateThread(struct _SECURITY_ATTRIBUTES *,
+                                GC_word,
+                                unsigned long (__stdcall *)(void *),
+                                void *, unsigned long, unsigned long *);
+      GC_API DECLSPEC_NORETURN void __stdcall GC_ExitThread(unsigned long);
+#   endif
 
 #   if !defined(_WIN32_WCE) && !defined(__CEGCC__)
 #     if !defined(_UINTPTR_T) && !defined(_UINTPTR_T_DEFINED) \
