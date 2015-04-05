@@ -142,8 +142,6 @@ by UseGC.  GC is an alias for UseGC, unless GC_NAME_CONFLICT is defined.
 
 #include "gc.h"
 
-#ifdef __cplusplus
-
 #ifndef THINK_CPLUS
 #  define GC_cdecl GC_CALLBACK
 #else
@@ -462,7 +460,5 @@ namespace std
     GC_FREE(p);
   }
 #endif
-
-#endif // __cplusplus
 
 #endif /* GC_CPP_H */
