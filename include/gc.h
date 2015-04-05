@@ -1498,8 +1498,3 @@ GC_API void GC_CALL GC_win32_free_heap(void);
 #endif
 
 #endif /* GC_H */
-
-
-#ifdef __cplusplus
-#include "gc_cpp.h"
-#endif
