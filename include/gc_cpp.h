@@ -272,11 +272,6 @@ inline void operator delete[]( void* obj ) {
 
 #endif
 
-
-// void* operator new( size_t size);
-// void operator delete(void* obj);
-
-    // MOVED HERE FROM gc_hpp.cc!
     inline void* operator new(size_t size)
     {
         return GC_MALLOC_UNCOLLECTABLE(size);
@@ -290,7 +285,7 @@ inline void operator delete[]( void* obj ) {
 
  // This new operator is used by VC++ in case of Debug builds !
 _Ret_bytecap_(_Size) inline void* operator new(  size_t size,
-                      int ,//nBlockUse,
+                      int /* nBlockUse */,
                       const char * szFileName,
                       int nLine )
     {
