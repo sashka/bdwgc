@@ -33,10 +33,6 @@
 #define REDIRECT_REALLOC    GC_REALLOC
 #define REDIRECT_MALLOC_IN_HEADER
 
-// the only mode that i support atm
-//  so hardcode it here, no point in making it configurable
-#define GC_DLL
-#define GC_WIN32_THREADS
 // lets provide the equivalent of system's malloc()
 // this is useful if we force-include the gc but hack other libs
 //  to be a bit more gc-aware
