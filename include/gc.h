@@ -36,7 +36,7 @@
 // lets provide the equivalent of system's malloc()
 // this is useful if we force-include the gc but hack other libs
 //  to be a bit more gc-aware
-#define ATOMIC_UNCOLLECTABLE
+#define GC_ATOMIC_UNCOLLECTABLE
 
 #ifndef GC_H
 #define GC_H

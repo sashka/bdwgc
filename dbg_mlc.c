@@ -345,7 +345,7 @@ STATIC void GC_print_type(ptr_t p)
           case UNCOLLECTABLE:
             GC_err_puts("UNCOLLECTABLE");
             break;
-#         ifdef ATOMIC_UNCOLLECTABLE
+#         ifdef GC_ATOMIC_UNCOLLECTABLE
             case AUNCOLLECTABLE:
               GC_err_puts("ATOMIC UNCOLLECTABLE");
               break;
@@ -718,7 +718,7 @@ GC_API void * GC_CALL GC_debug_malloc_uncollectable(size_t lb,
     return (GC_store_debug_info(result, (word)lb, s, i));
 }
 
-#ifdef ATOMIC_UNCOLLECTABLE
+#ifdef GC_ATOMIC_UNCOLLECTABLE
   GC_API void * GC_CALL GC_debug_malloc_atomic_uncollectable(size_t lb,
                                                              GC_EXTRA_PARAMS)
   {
@@ -739,7 +739,7 @@ GC_API void * GC_CALL GC_debug_malloc_uncollectable(size_t lb,
     ADD_CALL_CHAIN(result, ra);
     return (GC_store_debug_info(result, (word)lb, s, i));
   }
-#endif /* ATOMIC_UNCOLLECTABLE */
+#endif /* GC_ATOMIC_UNCOLLECTABLE */
 
 #ifndef GC_FREED_MEM_MARKER
 # if CPP_WORDSZ == 32
@@ -791,7 +791,7 @@ GC_API void GC_CALL GC_debug_free(void * p)
     } else {
       hdr * hhdr = HDR(p);
       if (hhdr -> hb_obj_kind == UNCOLLECTABLE
-#         ifdef ATOMIC_UNCOLLECTABLE
+#         ifdef GC_ATOMIC_UNCOLLECTABLE
             || hhdr -> hb_obj_kind == AUNCOLLECTABLE
 #         endif
           ) {
@@ -858,7 +858,7 @@ GC_API void * GC_CALL GC_debug_realloc(void * p, size_t lb, GC_EXTRA_PARAMS)
       case UNCOLLECTABLE:
         result = GC_debug_malloc_uncollectable(lb, OPT_RA s, i);
         break;
-#    ifdef ATOMIC_UNCOLLECTABLE
+#    ifdef GC_ATOMIC_UNCOLLECTABLE
       case AUNCOLLECTABLE:
         result = GC_debug_malloc_atomic_uncollectable(lb, OPT_RA s, i);
         break;

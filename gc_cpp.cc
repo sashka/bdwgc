@@ -32,4 +32,9 @@ Authors: John R. Ellis and Jesse Hull
 #   define GC_BUILD
 # endif
 
+#if !defined(GC_ATOMIC_UNCOLLECTABLE) && defined(ATOMIC_UNCOLLECTABLE)
+  /* For compatibility with old-style naming. */
+# define GC_ATOMIC_UNCOLLECTABLE
+#endif
+
 #include "gc_cpp.h"

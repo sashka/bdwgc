@@ -59,7 +59,7 @@ GC_INNER struct obj_kind GC_obj_kinds[MAXOBJKINDS] = {
 /* UNCOLLECTABLE */
               { &GC_uobjfreelist[0], 0,
                 0 | GC_DS_LENGTH, TRUE /* add length to descr */, TRUE },
-# ifdef ATOMIC_UNCOLLECTABLE
+# ifdef GC_ATOMIC_UNCOLLECTABLE
    /* AUNCOLLECTABLE */
               { &GC_auobjfreelist[0], 0,
                 0 | GC_DS_LENGTH, FALSE /* add length to descr */, FALSE },
@@ -70,7 +70,7 @@ GC_INNER struct obj_kind GC_obj_kinds[MAXOBJKINDS] = {
 # endif
 };
 
-# ifdef ATOMIC_UNCOLLECTABLE
+# ifdef GC_ATOMIC_UNCOLLECTABLE
 #   ifdef STUBBORN_ALLOC
 #     define GC_N_KINDS_INITIAL_VALUE 5
 #   else
@@ -82,7 +82,7 @@ GC_INNER struct obj_kind GC_obj_kinds[MAXOBJKINDS] = {
 #   else
 #     define GC_N_KINDS_INITIAL_VALUE 3
 #   endif
-# endif
+# endif /* !GC_ATOMIC_UNCOLLECTABLE */
 
 GC_INNER unsigned GC_n_kinds = GC_N_KINDS_INITIAL_VALUE;
 

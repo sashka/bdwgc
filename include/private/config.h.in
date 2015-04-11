@@ -4,7 +4,7 @@
 #undef ALL_INTERIOR_POINTERS
 
 /* Define to enable atomic uncollectible allocation. */
-#undef ATOMIC_UNCOLLECTABLE
+#undef GC_ATOMIC_UNCOLLECTABLE
 
 /* See doc/README.macros. */
 #undef DARWIN_DONT_PARSE_STACK

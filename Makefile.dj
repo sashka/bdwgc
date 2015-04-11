@@ -27,7 +27,7 @@ EXE_SUFFIX=.exe
 srcdir= .
 VPATH= $(srcdir)
 
-CFLAGS= -gstabs+ -O2 -I$(srcdir)/include -DATOMIC_UNCOLLECTABLE -DALL_INTERIOR_POINTERS -DNO_EXECUTE_PERMISSION
+CFLAGS= -gstabs+ -O2 -I$(srcdir)/include -DGC_ATOMIC_UNCOLLECTABLE -DALL_INTERIOR_POINTERS -DNO_EXECUTE_PERMISSION
 
 # Look into doc/README.macros for the description of the "define arguments"
 # influencing the collector configuration.

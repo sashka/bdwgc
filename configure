@@ -16467,7 +16467,7 @@ fi
 
 if test x"$enable_atomic_uncollectible" != x"no"; then
 
-$as_echo "#define ATOMIC_UNCOLLECTABLE 1" >>confdefs.h
+$as_echo "#define GC_ATOMIC_UNCOLLECTABLE 1" >>confdefs.h
 
 fi
 
