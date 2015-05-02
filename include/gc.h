@@ -1237,7 +1237,7 @@ GC_API void GC_CALL GC_register_has_static_roots_callback(
 
 #if defined(GC_WIN32_THREADS) && !defined(GC_PTHREADS)
 
-# ifndef GC_NO_THREAD_DECLS
+# if !defined(GC_NO_THREAD_DECLS) || defined(GC_BUILD)
 
 #   ifdef __cplusplus
       } /* Including windows.h in an extern "C" context no longer works. */
@@ -1267,6 +1267,14 @@ GC_API void GC_CALL GC_register_has_static_roots_callback(
 #     define DECLSPEC_NORETURN  __declspec(noreturn)
 #   endif
 
+#   if !defined(_UINTPTR_T) && !defined(_UINTPTR_T_DEFINED) \
+       && !defined(UINTPTR_MAX)
+      typedef GC_word GC_uintptr_t;
+#   else
+      typedef uintptr_t GC_uintptr_t;
+#   endif
+#   define GC_WIN32_SIZE_T GC_uintptr_t
+
     /* All threads must be created using GC_CreateThread or             */
     /* GC_beginthreadex, or must explicitly call GC_register_my_thread  */
     /* (and call GC_unregister_my_thread before thread termination), so */
@@ -1280,7 +1288,7 @@ GC_API void GC_CALL GC_register_has_static_roots_callback(
 #   if defined(WINAPI) /* windows.h included */
       GC_API HANDLE WINAPI GC_CreateThread(
                 LPSECURITY_ATTRIBUTES /* lpThreadAttributes */,
-                SIZE_T /* dwStackSize */,
+                GC_WIN32_SIZE_T /* dwStackSize */,
                 LPTHREAD_START_ROUTINE /* lpStartAddress */,
                 LPVOID /* lpParameter */, DWORD /* dwCreationFlags */,
                 LPDWORD /* lpThreadId */);
@@ -1290,20 +1298,13 @@ GC_API void GC_CALL GC_register_has_static_roots_callback(
 #   else
       struct _SECURITY_ATTRIBUTES;
       GC_API void *__stdcall GC_CreateThread(struct _SECURITY_ATTRIBUTES *,
-                                GC_word,
+                                GC_WIN32_SIZE_T,
                                 unsigned long (__stdcall *)(void *),
                                 void *, unsigned long, unsigned long *);
       GC_API DECLSPEC_NORETURN void __stdcall GC_ExitThread(unsigned long);
 #   endif
 
 #   if !defined(_WIN32_WCE) && !defined(__CEGCC__)
-#     if !defined(_UINTPTR_T) && !defined(_UINTPTR_T_DEFINED) \
-                && !defined(UINTPTR_MAX)
-        typedef GC_word GC_uintptr_t;
-#     else
-        typedef uintptr_t GC_uintptr_t;
-#     endif
-
       GC_API GC_uintptr_t GC_CALL GC_beginthreadex(
                         void * /* security */, unsigned /* stack_size */,
                         unsigned (__stdcall *)(void *),
