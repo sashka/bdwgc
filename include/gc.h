@@ -28,16 +28,6 @@
  * problems.
  */
 
-#define REDIRECT_MALLOC     GC_MALLOC_UNCOLLECTABLE
-#define REDIRECT_FREE       GC_FREE
-#define REDIRECT_REALLOC    GC_REALLOC
-#define REDIRECT_MALLOC_IN_HEADER
-
-// lets provide the equivalent of system's malloc()
-// this is useful if we force-include the gc but hack other libs
-//  to be a bit more gc-aware
-#define GC_ATOMIC_UNCOLLECTABLE
-
 #ifndef GC_H
 #define GC_H
 
@@ -1346,25 +1336,6 @@ GC_API void GC_CALL GC_register_has_static_roots_callback(
 # endif /* !GC_NO_THREAD_REDIRECTS */
 
 #endif /* GC_WIN32_THREADS */
-
-#ifdef REDIRECT_MALLOC
-// all the functions we redirect here need to have their header included
-//  prior to macro def-ing! otherwise the headers will be included after gc.h has
-//  been force-included and then we have two clashing symbols!
-#include <stdlib.h>
-#include <string.h>
-#ifdef __cplusplus
-#include <cstdlib>
-#include <cstring>
-#endif // __cplusplus
-#ifndef GC_BUILD
-#define free                REDIRECT_FREE
-#define malloc              REDIRECT_MALLOC
-#define calloc(n, lb)       REDIRECT_MALLOC((n) * (lb))
-#define realloc(p, lb)      REDIRECT_REALLOC((p), (lb))
-#define strdup              GC_STRDUP
-#endif // GC_BUILD
-#endif // REDIRECT_MALLOC
 
 /* Public setter and getter for switching "unmap as much as possible"   */
 /* mode on(1) and off(0).  Has no effect unless unmapping is turned on. */
