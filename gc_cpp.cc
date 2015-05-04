@@ -38,3 +38,25 @@ Authors: John R. Ellis and Jesse Hull
 #endif
 
 #include "gc_cpp.h"
+
+#ifndef _MSC_VER
+
+  void* operator new(size_t size) {
+    return GC_MALLOC_UNCOLLECTABLE(size);
+  }
+
+  void operator delete(void* obj) {
+    GC_FREE(obj);
+  }
+
+# ifdef GC_OPERATOR_NEW_ARRAY
+    void* operator new[](size_t size) {
+      return GC_MALLOC_UNCOLLECTABLE(size);
+    }
+
+    void operator delete[](void* obj) {
+      GC_FREE(obj);
+    }
+# endif // GC_OPERATOR_NEW_ARRAY
+
+#endif // !_MSC_VER
