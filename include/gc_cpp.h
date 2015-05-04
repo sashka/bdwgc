@@ -267,7 +267,7 @@ inline void* operator new(size_t size, GCPlacement gcp,
   // including this everywhere.
 
 # if _MSC_VER > 1020
-    _Ret_bytecap_(_Size) inline void *operator new[](size_t size)
+    inline void *operator new[](size_t size)
     {
       return GC_MALLOC_UNCOLLECTABLE(size);
     }
@@ -289,7 +289,6 @@ inline void* operator new(size_t size, GCPlacement gcp,
   }
 
   // This new operator is used by VC++ in case of Debug builds:
-  _Ret_bytecap_(_Size)
   inline void* operator new(size_t size, int /* nBlockUse */,
                             const char* szFileName, int nLine)
   {
@@ -300,7 +299,6 @@ inline void* operator new(size_t size, GCPlacement gcp,
 #   endif
   }
 
-  _Ret_bytecap_(_Size)
   inline void* operator new[](size_t size, int nBlockUse,
                               const char* szFileName, int nLine)
   {
