@@ -459,15 +459,6 @@ inline void* operator new(size_t size, GCPlacement gcp, GCCleanUpFunc cleanup,
   }
 #endif // GC_OPERATOR_NEW_ARRAY
 
-// oooohh... big hack (mainly for vnl which explicitly references mem-stuff via std namespace)
-namespace std
-{
-  using ::GC_debug_malloc_uncollectable;
-  using ::GC_debug_realloc;
-  using ::GC_realloc;
-  using ::GC_malloc_uncollectable;
-}
-
 #if defined(__CYGWIN__)
 # include <new> // for delete throw()
   inline void operator delete(void *p)
