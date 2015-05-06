@@ -420,9 +420,10 @@ inline gc_cleanup::gc_cleanup()
 inline void* operator new(size_t size, GCPlacement gcp, GCCleanUpFunc cleanup,
                           void* clientData)
 {
+  void* obj;
   switch (gcp) {
   case UseGC:
-    void* obj = GC_MALLOC(size);
+    obj = GC_MALLOC(size);
     if (cleanup != 0) {
       GC_REGISTER_FINALIZER_IGNORE_SELF(obj, cleanup, clientData, 0, 0);
     }
