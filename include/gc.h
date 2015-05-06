@@ -1273,7 +1273,14 @@ GC_API void GC_CALL GC_register_has_static_roots_callback(
 #   else
       typedef uintptr_t GC_uintptr_t;
 #   endif
-#   define GC_WIN32_SIZE_T GC_uintptr_t
+
+#   ifdef _WIN64
+#     define GC_WIN32_SIZE_T GC_uintptr_t
+#   elif defined(WINAPI) /* windows.h included */
+#     define GC_WIN32_SIZE_T DWORD
+#   else
+#     define GC_WIN32_SIZE_T unsigned long
+#   endif
 
     /* All threads must be created using GC_CreateThread or             */
     /* GC_beginthreadex, or must explicitly call GC_register_my_thread  */
